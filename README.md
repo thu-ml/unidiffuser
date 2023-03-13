@@ -21,8 +21,8 @@ In particular, UniDiffuser is able to produce perceptually realistic samples in 
 ```sh
 conda create -n unidiffuser python=3.9
 conda activate unidiffuser
-conda install pytorch torchvision cudatoolkit=11.3
-pip install accelerate==0.12.0 absl-py ml_collections einops wandb ftfy==6.1.1 transformers==4.23.1
+pip install torch torchvision --extra-index-url https://download.pytorch.org/whl/cu116  # install torch-1.13.1
+pip install accelerate==0.12.0 absl-py ml_collections einops ftfy==6.1.1 transformers==4.23.1
 pip install -e git+https://github.com/openai/CLIP.git@main#egg=clip
 
 # xformers is optional, but it would greatly speed up the attention computation.
