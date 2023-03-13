@@ -5,8 +5,6 @@ from .timm import trunc_normal_, DropPath, Mlp
 import einops
 import torch.utils.checkpoint
 import torch.nn.functional as F
-import clip
-from libs.clip import FrozenCLIPEmbedder
 # the xformers lib allows less memory, faster training and inference
 try:
     import xformers
@@ -205,13 +203,6 @@ class UViT(nn.Module):
 
         trunc_normal_(self.pos_embed, std=.02)
         self.apply(self._init_weights)
-
-        # clip_model_type = '/realai-vePFS/cocodata/data/nieshen/ViT-B-32.pt'  # "ViT-B/32"  # the image clip
-        # self.clip_model, self.preprocess = clip.load(clip_model_type, jit=False)
-        # self.clip_model.eval()
-        # for param in self.clip_model.parameters():
-        #     param.requires_grad = False
-        # self.textClipEncoder = FrozenCLIPEmbedder()
 
     def _init_weights(self, m):
         if isinstance(m, nn.Linear):

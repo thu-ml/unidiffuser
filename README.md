@@ -1,6 +1,6 @@
 ## UniDiffuser
 
-Code and models for the paper ["One Transformer Fits All Distributions in Multi-Modal Diffusion"]()
+Code and models for the paper ["One Transformer Fits All Distributions in Multi-Modal Diffusion"](https://ml.cs.tsinghua.edu.cn/diffusion/unidiffuser.pdf)
 
 <img src="assets/demos_v0.png" alt="drawing" width="800"/>
 
@@ -21,8 +21,9 @@ In particular, UniDiffuser is able to produce perceptually realistic samples in 
 ```sh
 conda create -n unidiffuser python=3.9
 conda activate unidiffuser
-conda install pytorch torchvision torchaudio cudatoolkit=11.3
+conda install pytorch torchvision cudatoolkit=11.3
 pip install accelerate==0.12.0 absl-py ml_collections einops wandb ftfy==6.1.1 transformers==4.23.1
+pip install -e git+https://github.com/openai/CLIP.git@main#egg=clip
 
 # xformers is optional, but it would greatly speed up the attention computation.
 pip install -U xformers
@@ -98,9 +99,9 @@ python sample_multi_v1.py --mode=i2t2i --img=assets/space.jpg
 python sample_multi_v1.py --mode=t2i2t --prompt="an elephant under the sea"
 ```
 
-
+We provide all supported arguments below
 ```
-optional arguments:
+all supported arguments:
     --mode                          type of generation, one of t2i / i2t / joint / i / t / i2t2i/ t2i2t
                                         t2i: text to image
                                         i2t: image to text

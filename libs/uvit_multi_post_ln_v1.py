@@ -1,21 +1,19 @@
 import torch
 import torch.nn as nn
 import math
-import timm
-from timm.models.layers import trunc_normal_
-from timm.models.vision_transformer import DropPath, Mlp
-assert timm.__version__ == "0.3.2"  # version check
+from .timm import trunc_normal_, DropPath, Mlp
 import einops
 import torch.utils.checkpoint
 import torch.nn.functional as F
-import clip
-from libs.clip import FrozenCLIPEmbedder
+# the xformers lib allows less memory, faster training and inference
 try:
     import xformers
     import xformers.ops
     XFORMERS_IS_AVAILBLE = True
+    print('xformers enabled')
 except:
     XFORMERS_IS_AVAILBLE = False
+    print('xformers disabled')
 
 
 def timestep_embedding(timesteps, dim, max_period=10000):
@@ -47,7 +45,6 @@ def patchify(imgs, patch_size):
 def unpatchify(x, in_chans):
     patch_size = int((x.shape[2] // in_chans) ** 0.5)
     h = w = int(x.shape[1] ** .5)
-    # assert h * w == x.shape[1] and patch_size ** 2 * 3 == x.shape[2]
     assert h * w == x.shape[1] and patch_size ** 2 * in_chans == x.shape[2]
     x = einops.rearrange(x, 'B (h w) (p1 p2 C) -> B C (h p1) (w p2)', h=h, p1=patch_size, p2=patch_size)
     return x
@@ -65,7 +62,6 @@ class Attention(nn.Module):
         super().__init__()
         self.num_heads = num_heads
         head_dim = dim // num_heads
-        # NOTE scale factor was wrong in my original version, can set manually to be compat with prev weights
         self.scale = qk_scale or head_dim ** -0.5
 
         self.qkv = nn.Linear(dim, dim * 3, bias=qkv_bias)
@@ -74,22 +70,21 @@ class Attention(nn.Module):
         self.proj_drop = nn.Dropout(proj_drop)
 
     def forward(self, x):
-        B, N, C = x.shape
-        if XFORMERS_IS_AVAILBLE:
-            qkv = self.qkv(x)
+        B, L, C = x.shape
+
+        qkv = self.qkv(x)
+        if XFORMERS_IS_AVAILBLE:  # the xformers lib allows less memory, faster training and inference
             qkv = einops.rearrange(qkv, 'B L (K H D) -> K B L H D', K=3, H=self.num_heads)
             q, k, v = qkv[0], qkv[1], qkv[2]  # B L H D
             x = xformers.ops.memory_efficient_attention(q, k, v)
             x = einops.rearrange(x, 'B L H D -> B L (H D)', H=self.num_heads)
         else:
-            qkv = self.qkv(x).reshape(B, N, 3, self.num_heads, C // self.num_heads).permute(2, 0, 3, 1, 4)
-            q, k, v = qkv[0], qkv[1], qkv[2]   # make torchscript happy (cannot use tensor as tuple)
-
+            qkv = einops.rearrange(qkv, 'B L (K H D) -> K B H L D', K=3, H=self.num_heads)
+            q, k, v = qkv[0], qkv[1], qkv[2]  # B H L D
             attn = (q @ k.transpose(-2, -1)) * self.scale
             attn = attn.softmax(dim=-1)
             attn = self.attn_drop(attn)
-
-            x = (attn @ v).transpose(1, 2).reshape(B, N, C)
+            x = (attn @ v).transpose(1, 2).reshape(B, L, C)
 
         x = self.proj(x)
         x = self.proj_drop(x)
@@ -103,10 +98,9 @@ class Block(nn.Module):
         super().__init__()
         self.norm1 = norm_layer(dim) if skip else None
         self.norm2 = norm_layer(dim)
-        
+
         self.attn = Attention(
             dim, num_heads=num_heads, qkv_bias=qkv_bias, qk_scale=qk_scale, attn_drop=attn_drop, proj_drop=drop)
-        # NOTE: drop path for stochastic depth, we shall see if this is better than dropout here
         self.drop_path = DropPath(drop_path) if drop_path > 0. else nn.Identity()
         self.norm3 = norm_layer(dim)
         mlp_hidden_dim = int(dim * mlp_ratio)
@@ -210,8 +204,9 @@ class UViT(nn.Module):
         trunc_normal_(self.pos_embed, std=.02)
         self.apply(self._init_weights)
 
-        self.token_embedding = nn.Embedding(2,embed_dim)
+        self.token_embedding = nn.Embedding(2, embed_dim)
         self.pos_embed_token = nn.Parameter(torch.zeros(1, 1, embed_dim))
+
     def _init_weights(self, m):
         if isinstance(m, nn.Linear):
             trunc_normal_(m.weight, std=.02)
