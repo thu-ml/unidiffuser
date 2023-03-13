@@ -368,6 +368,8 @@ def evaluate(config):
         with open(os.path.join(config.output_path, config.mode, f'{config.mode}.txt'), 'w') as f:
             print('\n'.join(samples), file=f)
 
+    print(f'\nresults are saved in {os.path.join(config.output_path, config.mode)} :)')
+
 
 from absl import flags
 from absl import app
@@ -378,7 +380,6 @@ import os
 FLAGS = flags.FLAGS
 config_flags.DEFINE_config_file(
     "config", "configs/sample_unidiffuser_v1.py", "Configuration.", lock_config=False)
-flags.mark_flags_as_required(["config"])
 flags.DEFINE_string("nnet_path", "models/uvit_v1.pth", "The nnet to evaluate.")
 flags.DEFINE_string("output_path", "out", "dir to write results to")
 flags.DEFINE_string("prompt", "an elephant under the sea", "the prompt for text-to-image generation and text variation")
