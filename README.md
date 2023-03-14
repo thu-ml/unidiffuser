@@ -144,10 +144,10 @@ If you find the code useful for your research, please consider citing
   year={2023}
 }
 
-@article{bao2022all,
-  title={All are Worth Words: a ViT Backbone for Score-based Diffusion Models},
-  author={Bao, Fan and Li, Chongxuan and Cao, Yue and Zhu, Jun},
-  journal={arXiv preprint arXiv:2209.12152},
+@inproceedings{bao2022all,
+  title={All are Worth Words: A ViT Backbone for Diffusion Models},
+  author={Bao, Fan and Nie, Shen and Xue, Kaiwen and Cao, Yue and Li, Chongxuan and Su, Hang and Zhu, Jun},
+  booktitle = {CVPR},
   year={2022}
 }
 ```
