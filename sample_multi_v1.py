@@ -12,6 +12,7 @@ import torchvision.transforms as standard_transforms
 import numpy as np
 import clip
 from PIL import Image
+import time
 
 
 def stable_diffusion_beta_schedule(linear_start=0.00085, linear_end=0.0120, n_timestep=1000):
@@ -299,7 +300,10 @@ def evaluate(config):
         dpm_solver = DPM_Solver(model_fn, noise_schedule, predict_x0=True, thresholding=False)
         with torch.no_grad():
             with torch.autocast(device_type=device):
+                start_time = time.time()
                 x = dpm_solver.sample(_x_init, steps=config.sample.sample_steps, eps=1. / N, T=1.)
+                end_time = time.time()
+                print(f'\ngenerate {_n_samples} samples with {config.sample.sample_steps} steps takes {end_time - start_time:.2f}s')
 
         os.makedirs(config.output_path, exist_ok=True)
         if mode == 'joint':
@@ -368,6 +372,7 @@ def evaluate(config):
         with open(os.path.join(config.output_path, config.mode, f'{config.mode}.txt'), 'w') as f:
             print('\n'.join(samples), file=f)
 
+    print(f'\nGPU memory usage: {torch.cuda.max_memory_reserved() / 1024 ** 3:.2f} GB')
     print(f'\nresults are saved in {os.path.join(config.output_path, config.mode)} :)')
 
 
