@@ -388,8 +388,8 @@ flags.DEFINE_string("mode", None,
                     "joint: joint generation of text and image\n"
                     "i: only generate image\n"
                     "t: only generate text\n"
-                    "i2t2i: text variation, first image to text, then text to image\n"
-                    "t2i2t: image variation, first text to image, the image to text\n"
+                    "i2t2i: image variation, first image to text, then text to image\n"
+                    "t2i2t: text variation, first text to image, the image to text\n"
                     )
 
 
