@@ -1,6 +1,6 @@
 ## UniDiffuser
 
-Code and models for the paper ["One Transformer Fits All Distributions in Multi-Modal Diffusion"](https://ml.cs.tsinghua.edu.cn/diffusion/unidiffuser.pdf)
+Code and models for the paper ["One Transformer Fits All Distributions in Multi-Modal Diffusion"](https://arxiv.org/abs/2303.06555)
 
 <img src="assets/demos_v0.png" alt="drawing" width="800"/>
 
@@ -39,8 +39,8 @@ pip install -U --pre triton
 UniDiffuser employs a variation of transformer, called [U-ViT](https://github.com/baofff/U-ViT), which parameterizes the joint noise prediction network. Other components perform as encoders and decoders of different modalities, including a pretrained image autoencoder from [Stable Diffusion](https://github.com/CompVis/stable-diffusion), a pretrained [image ViT-B/32 CLIP encoder](https://github.com/openai/CLIP), a pretrained [text ViT-L CLIP encoder](https://huggingface.co/openai/clip-vit-large-patch14), and a [GPT-2](https://github.com/openai/gpt-2) text decoder finetuned by ourselves.
 
 
-We provide two versions of UniDiffuser, which can be downloaded from Hugging Face:
-- [UniDiffuser-v0](https://huggingface.co/thu-ml/unidiffuser-v0): This version is trained on [LAION-5B](https://laion.ai/), which contains noisy webdata of text-image pairs.
+We provide two versions of UniDiffuser, which contain U-ViT of 1B parameters and can run on a GPU with at least 10 GB memory. They can be downloaded from Hugging Face:
+- [UniDiffuser-v0](https://huggingface.co/thu-ml/unidiffuser-v0): This version is trained on [LAION-5B](https://laion.ai/) at 512x512 resolution, which contains noisy webdata of text-image pairs.
 - [UniDiffuser-v1](https://huggingface.co/thu-ml/unidiffuser-v1): This version is resumed from UniDiffuser-v0, and is further trained with a set of less noisy internal text-image pairs. It uses a flag as its input to distinguish webdata and internal data during training.
 
 Both links contain three files:
@@ -148,7 +148,7 @@ If you find the code useful for your research, please consider citing
   title={All are Worth Words: A ViT Backbone for Diffusion Models},
   author={Bao, Fan and Nie, Shen and Xue, Kaiwen and Cao, Yue and Li, Chongxuan and Su, Hang and Zhu, Jun},
   booktitle = {CVPR},
-  year={2022}
+  year={2023}
 }
 ```
 
