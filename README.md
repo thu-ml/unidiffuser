@@ -3,6 +3,7 @@
 Code and models for the paper ["One Transformer Fits All Distributions in Multi-Modal Diffusion"](https://arxiv.org/abs/2303.06555)
 
 [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/thu-ml/unidiffuser)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/thu-ml/unidiffuser/blob/main/UniDiffuser.ipynb)
 
 <img src="assets/demos_v0.png" alt="drawing" width="800"/>
 
