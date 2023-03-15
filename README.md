@@ -111,8 +111,8 @@ all supported arguments:
                                         joint: joint generation of text and image
                                         i: only generate image
                                         t: only generate text
-                                        i2t2i: text variation, first image to text, then text to image
-                                        t2i2t: image variation, first text to image, the image to text
+                                        i2t2i: image variation, first image to text, then text to image
+                                        t2i2t: text variation, first text to image, the image to text
     --prompt                        the prompt for text-to-image generation and text variation
     --img                           the image path for image-to-text generation and image variation
     --n_samples                     the number of samples to generate, default is 1
