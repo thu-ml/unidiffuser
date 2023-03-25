@@ -30,10 +30,7 @@ def set_logger(log_level='info', fname=None):
 
 
 def get_nnet(name, **kwargs):
-    if name == 'uvit_multi_post_ln':
-        from libs.uvit_multi_post_ln import UViT
-        return UViT(**kwargs)
-    elif name == 'uvit_multi_post_ln_v1':
+    if name == 'uvit_multi_post_ln_v1':
         from libs.uvit_multi_post_ln_v1 import UViT
         return UViT(**kwargs)
     else:
@@ -54,7 +51,7 @@ def drawRoundRec(draw, color, x, y, w, h, r):
     drawObject.rectangle((x, y + r / 2, x + w, y + h - (r / 2)), fill=color)
 
 
-def add_water(img, text='UniDiffuser', pos=3):
+def add_water(img, text='Pdddle_UniDiffuser', pos=3):
     width, height = img.size
     scale = 4
     scale_size = 0.5

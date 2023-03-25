@@ -1,3 +1,35 @@
+## Paddle UniDiffuser
+
+```sh
+pip install paddlepaddle-gpu==2.4.2 # cu117
+pip install paddlenlp # no need transformers==4.23.1
+pip install accelerate==0.12.0 absl-py ml_collections ftfy==6.1.1
+
+# xformers is optional, but it would greatly speed up the attention computation.
+pip install -U xformers
+pip install -U --pre triton
+```
+
+```
+├── models
+│   └── autoencoder_kl.pdparams
+│   └── caption_decoder.pdparams
+│   └── uvit_v1.pdparams
+```
+
+```sh
+CUDA_VISIBLE_DEVICES=0 python3.7 sample_multi_v1.py --mode=t2i --prompt="an elephant under the sea"
+CUDA_VISIBLE_DEVICES=0 python3.7 sample_multi_v1.py --mode=i2t --img=assets/space.jpg
+
+CUDA_VISIBLE_DEVICES=1 python3.7 sample_multi_v1.py --mode=i
+CUDA_VISIBLE_DEVICES=1 python3.7 sample_multi_v1.py --mode=t
+CUDA_VISIBLE_DEVICES=1 python3.7 sample_multi_v1.py --mode=joint
+
+CUDA_VISIBLE_DEVICES=2 python3.7 sample_multi_v1.py --mode=i2t2i --img=assets/space.jpg
+CUDA_VISIBLE_DEVICES=2 python3.7 sample_multi_v1.py --mode=t2i2t --prompt="an elephant under the sea"
+```
+
+
 ## UniDiffuser
 
 Code and models for the paper ["One Transformer Fits All Distributions in Multi-Modal Diffusion"](https://arxiv.org/abs/2303.06555)

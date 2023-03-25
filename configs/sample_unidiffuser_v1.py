@@ -18,11 +18,11 @@ def get_config():
     config.data_type = 1
 
     config.autoencoder = d(
-        pretrained_path='models/autoencoder_kl.pth',
+        pretrained_path='models/autoencoder_kl.pdparams',
     )
 
     config.caption_decoder = d(
-        pretrained_path="models/caption_decoder.pth",
+        pretrained_path="models/caption_decoder.pdparams",
         hidden_dim=config.get_ref('text_dim')
     )
 
@@ -43,7 +43,7 @@ def get_config():
         text_dim=config.get_ref('text_dim'),
         num_text_tokens=77,
         clip_img_dim=config.get_ref('clip_img_dim'),
-        use_checkpoint=True
+        use_checkpoint=False,
     )
 
     config.sample = d(
