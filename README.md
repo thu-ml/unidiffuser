@@ -5,8 +5,8 @@ Code and models for the paper ["One Transformer Fits All Distributions in Multi-
 [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/thu-ml/unidiffuser)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/thu-ml/unidiffuser/blob/main/UniDiffuser.ipynb)
 [![Replicate](https://replicate.com/cjwbw/unidiffuser/badge)](https://replicate.com/cjwbw/unidiffuser)
+[![Diffusers](https://img.shields.io/badge/%F0%9F%A7%A8-diffusers-red)](https://huggingface.co/docs/diffusers/main/en/api/pipelines/unidiffuser)
 <img src="assets/demos_v0.png" alt="drawing" width="800"/>
-
 
 UniDiffuser is a unified diffusion framework to fit all distributions relevant to a set of multi-modal data in one model. 
 Its key insight is -- learning diffusion models for marginal, conditional, and joint distributions can be unified as predicting the noise in the perturbed data, where the perturbation levels (i.e. timesteps) can be different for different modalities. 
@@ -136,6 +136,30 @@ The inference command of UniDiffuser-v0 is basically the same as UniDiffuser-v1,
 ```shell
 python sample_multi_v0.py --mode=t2i --prompt="an elephant under the sea"
 ```
+
+## Integration with 🧨 diffusers
+
+UniDiffuser is also available in 🧨 diffusers. It is available in six different modes. 
+Here is how one can use the `UniDiffuserPipeline` to generate images from text:
+
+```python
+import torch
+from diffusers import UniDiffuserPipeline
+
+device = "cuda"
+model_id_or_path = "thu-ml/unidiffuser-v1"
+pipe = UniDiffuserPipeline.from_pretrained(model_id_or_path, torch_dtype=torch.float16)
+pipe.to(device)
+
+# Text-to-image generation
+prompt = "an elephant under the sea"
+
+sample = pipe(prompt=prompt, num_inference_steps=20, guidance_scale=8.0)
+t2i_image = sample.images[0]
+t2i_image.save("unidiffuser_text2img_sample_image.png")
+```
+
+To learn more details, check out the official [UniDiffuser documentation](https://huggingface.co/docs/diffusers/main/en/api/pipelines/unidiffuser). 
 
 
 ## References
